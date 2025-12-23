@@ -1,7 +1,10 @@
+import LayoutSwitch from "~/components/layout-switch"
+
 export default function Dashboard() {
   return (
-    <div>
-      <h1>Dashboard</h1>
+    <LayoutSwitch>
+      <div>
+        <h1>Dashboard</h1>
         <div class="flex flex-1 flex-col gap-4 p-4">
           <div class="grid auto-rows-min gap-4 md:grid-cols-3">
             <div class="aspect-video rounded-xl bg-muted/50" />
@@ -10,6 +13,7 @@ export default function Dashboard() {
           </div>
           <div class="min-h-screen flex-1 rounded-xl bg-muted/50 md:min-h-min" />
         </div>
-    </div>
+      </div>
+    </LayoutSwitch>
   );
 }

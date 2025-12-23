@@ -17,29 +17,29 @@ import BlankLayout from "~/layouts/BlankLayout";
 export default function App() {
   return (
     <MetaProvider>
-      <Title>TicketBux</Title>
+      <Title>Ojii ITS</Title>
       <Router
         root={(props) => {
 
-          const userId = createAsync(() => getAuthenticatedUser());
+          // const userId = createAsync(() => getAuthenticatedUser());
 
-          // Robust path checking
-          const layoutType = createMemo(() => {
-            if (userId()) return "authenticated";
+          // // Robust path checking
+          // const layoutType = createMemo(() => {
+          //   if (userId()) return "authenticated";
             
-            const path = props.location.pathname.toLowerCase();
-            const blankRoutes = ["/", "/login", "/register", "/forgot-password"];
-            const isMatch = blankRoutes.some(route => path === route || path === `${route}/`);
+          //   const path = props.location.pathname.toLowerCase();
+          //   const blankRoutes = ["/", "/login", "/register", "/forgot-password"];
+          //   const isMatch = blankRoutes.some(route => path === route || path === `${route}/`);
             
-            return isMatch ? "blank" : "authenticated";
-          });
+          //   return isMatch ? "blank" : "authenticated";
+          // });
 
           return (
             <ErrorBoundary fallback={(err) => {
               console.error("Global Error:", err);
               return <div class="p-4 text-red-500">Something went wrong. Check console.</div>
             }}>
-              {layoutType() === "blank" ? (
+              {/* {layoutType() === "blank" ? (
                 <BlankLayout>
                   <Suspense>{props.children}</Suspense>
                 </BlankLayout>
@@ -47,7 +47,8 @@ export default function App() {
                 <Authenticated>
                   <Suspense>{props.children}</Suspense>
                 </Authenticated>
-              )}
+              )} */}
+              <Suspense>{props.children}</Suspense>
               <Toaster />
             </ErrorBoundary>
           );

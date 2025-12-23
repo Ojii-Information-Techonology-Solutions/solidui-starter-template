@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 // 1. Define your company themes/slides
 const slides = [
   {
-    name: "TicketBux Original",
+    name: "Ojii Original",
     image: "https://your-image-url.jpg", // The image you uploaded
     primary: "#FFD200", // The yellow from your logo
     secondary: "#000000"
