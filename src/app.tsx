@@ -9,11 +9,22 @@ import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
-import "./app.css"; 
+import "./app.css";
 
-import { useAuthSession } from "./lib/session";
+
+import { ColorModeProvider, ColorModeScript, cookieStorageManagerSSR } from "@kobalte/core";
+import { getCookie } from "vinxi/http";
+import { isServer } from "solid-js/web";
+
+function getServerCookies() {
+  "use server"
+  const colorMode = getCookie("kb-color-mode")
+  return colorMode ? `kb-color-mode=${colorMode}` : ""
+}
+
 
 export default function App() {
+  const storageManager = cookieStorageManagerSSR(isServer ? getServerCookies() : document.cookie)
 
   return (
     <MetaProvider>
@@ -26,9 +37,11 @@ export default function App() {
               console.error("Global Error:", err);
               return <div class="p-4 text-red-500">Something went wrong. Check console.</div>
             }}>
-
-              <Suspense>{props.children}</Suspense>
-              <Toaster />
+              <ColorModeScript storageType={storageManager.type} />
+              <ColorModeProvider storageManager={storageManager}>
+                <Suspense>{props.children}</Suspense>
+                <Toaster />
+              </ColorModeProvider>
             </ErrorBoundary>
           );
         }}
