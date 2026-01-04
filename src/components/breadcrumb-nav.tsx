@@ -1,5 +1,5 @@
 import { useLocation } from "@solidjs/router";
-import { createMemo, For } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,29 +7,21 @@ import {
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-// import { useColorMode } from "@kobalte/core"
-// import { IconLaptop, IconMoon, IconSun } from "~/components/icons"
-// import { Button } from "~/components/ui/button"
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuTrigger
-// } from "~/components/ui/dropdown-menu"
-
 
 export function BreadcrumbNav() {
   const location = useLocation();
-  // const { setColorMode } = useColorMode();
 
   const links = createMemo(() => {
     const path = location.pathname;
-    if (path === "/") {
-      return [{ title: "Dashboard", href: "/", last: true }];
+
+    // Dashboard is the home - show only "Dashboard"
+    if (path === "/" || path === "/dashboard") {
+      return [{ title: "Dashboard", href: "/dashboard", last: true }];
     }
 
     const segments = path.split("/").filter((item) => item !== "");
     const breadcrumbs = segments.map((item, index) => {
+      // Format title: kebab-case to Title Case
       const title = item
         .replace(/-/g, " ")
         .split(" ")
@@ -43,30 +35,31 @@ export function BreadcrumbNav() {
       };
     });
 
-    return [{ title: "Dashboard", href: "/", last: false }, ...breadcrumbs];
+    // Always start with Dashboard link
+    return [{ title: "Dashboard", href: "/dashboard", last: false }, ...breadcrumbs];
   });
 
   return (
-    <>
-        <Breadcrumb>
-          <BreadcrumbList>
-            <For each={links()}>
-              {(link) => (
-                <>
-                  <BreadcrumbItem>
-                    {link.last ? (
-                      <div class="font-medium">{link.title}</div>
-                    ) : (
-                      <BreadcrumbLink href={link.href}>{link.title}</BreadcrumbLink>
-                    )}
-                  </BreadcrumbItem>
-                  {!link.last && <BreadcrumbSeparator />}
-                </>
-              )}
-            </For>
-          </BreadcrumbList>
-        </Breadcrumb>
-
-    </>
+    <Breadcrumb>
+      <BreadcrumbList>
+        <For each={links()}>
+          {(link) => (
+            <>
+              <BreadcrumbItem>
+                <Show
+                  when={link.last}
+                  fallback={<BreadcrumbLink href={link.href}>{link.title}</BreadcrumbLink>}
+                >
+                  <span class="font-medium">{link.title}</span>
+                </Show>
+              </BreadcrumbItem>
+              <Show when={!link.last}>
+                <BreadcrumbSeparator />
+              </Show>
+            </>
+          )}
+        </For>
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }
